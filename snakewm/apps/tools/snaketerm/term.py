@@ -19,7 +19,7 @@ class SnakeTerm(pygame_gui.elements.UIWindow):
         super().__init__(
             pygame.Rect(pos, (400, 300)),
             manager,
-            window_display_title="snaketerm",
+            window_display_title="PyTerminal",
             object_id="#snaketerm",
             resizable=True,
         )
@@ -211,3 +211,10 @@ def script(data):
         print(result)
     except subprocess.CalledProcessError as e:
         print(e.output)
+def lizardhelp():
+    print(r'''kernelpanic() - kernel panic (linux)
+    pip("install colorama") - pip
+    script("ls -la") - bash commands bridge
+    logpanic("error") - custom/fake corepanic()
+    corepanic() - lizardos gui panic
+    lizardhelp() - commands list''')
