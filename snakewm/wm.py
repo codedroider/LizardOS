@@ -1,5 +1,5 @@
 """
-Snake Window Manager
+Snake Window Manager (LizardWM)
 """
 
 TESTMODE = __name__ == "__main__"
