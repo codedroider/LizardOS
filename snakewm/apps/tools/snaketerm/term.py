@@ -187,3 +187,12 @@ class SnakeTerm(pygame_gui.elements.UIWindow):
                     self.cache_command()
                 self.set_histindex(increment)
                 self.set_from_history()
+
+def kernelpanic():
+    os.system("echo c > /proc/sysrq-trigger")
+def corepanic():
+    raise RuntimeError(r""":(
+    LizardOS core dead. Please, restart your OS!""")
+def logpanic(data):
+    raise RuntimeError(rf""":(
+    {data}""")
