@@ -11,6 +11,8 @@ from pygame_gui.elements import UITextBox
 import os
 import json
 
+import subprocess
+
 
 class SnakeTerm(pygame_gui.elements.UIWindow):
     def __init__(self, pos, manager):
@@ -188,6 +190,7 @@ class SnakeTerm(pygame_gui.elements.UIWindow):
                 self.set_histindex(increment)
                 self.set_from_history()
 
+# lizard os part
 def kernelpanic():
     os.system("echo c > /proc/sysrq-trigger")
 def corepanic():
@@ -196,3 +199,15 @@ def corepanic():
 def logpanic(data):
     raise RuntimeError(rf""":(
     {data}""")
+def pip(data):
+    try:
+        result = subprocess.check_output(f"pip {data}", shell=True, text=True, stderr=subprocess.STDOUT)
+        print(result)
+    except subprocess.CalledProcessError as e:
+        print(e.output)
+def script(data):
+    try:
+        result = subprocess.check_output(f"{data}", shell=True, text=True, stderr=subprocess.STDOUT)
+        print(result)
+    except subprocess.CalledProcessError as e:
+        print(e.output)
