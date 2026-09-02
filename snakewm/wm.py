@@ -152,8 +152,8 @@ class SnakeWM:
         try:
             _app.load(self.MANAGER, params)
         except:
-            
             pygame.quit()
+            self.toast('App crashed!')
 
     def appmenu_load(self, app):
         """
