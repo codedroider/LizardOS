@@ -82,6 +82,9 @@ class SnakeWM:
         os.putenv("SDL_FBDEV", "/dev/fb0")
         pygame.display.init()
 
+        # make a toast (lizard)
+        self.toast('Welcome to LizardOS!')
+
         # get screen dimensions
         self.DIMS = (pygame.display.Info().current_w, pygame.display.Info().current_h)
 
@@ -113,6 +116,23 @@ class SnakeWM:
                 tree[f] = {}
                 SnakeWM.iter_dir(tree[f], path + "/" + f)
 
+        def toast(self, text):
+            from pygame_gui.elements import UILabel
+            import threading, time
+        
+            w, h = pygame.display.get_surface().get_size()
+            lbl = UILabel(pygame.Rect((w//2 - 200, h - 100), (400, 40)), str(text), self.MANAGER)
+        
+            lbl.text_colour = pygame.Color("#FFFFFF")
+            lbl.background_colour = pygame.Color("#222222")
+            lbl.rebuild()
+
+            def thide():
+                time.sleep(3)
+                lbl.kill()
+            threading.Thread(target=thide, daemon=True).start()
+
+    
     def loadapp(self, app, params=None):
         """
         Load and run a Python module as an app (ie "apps.test.HelloWorld").
@@ -132,6 +152,7 @@ class SnakeWM:
         try:
             _app.load(self.MANAGER, params)
         except:
+            
             pygame.quit()
 
     def appmenu_load(self, app):
@@ -183,6 +204,9 @@ class SnakeWM:
                                 self.APPS,
                                 self.appmenu_load,
                             )
+                            # lizard fade-in for app menu
+                            self.APPMENU.get_container().surface.set_alpha(self.menu_alpha)
+                            self.menu_alpha = min(255, self.menu_alpha + 15)
                         else:
                             # close app menu
                             self.APPMENU.destroy()
