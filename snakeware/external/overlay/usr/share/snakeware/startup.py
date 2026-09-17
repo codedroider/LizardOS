@@ -1,3 +1,5 @@
+# yo, this is kernel, i think!
+
 class Command:
     """Defines a command which is run when repr(self) is evaluated."""
 
