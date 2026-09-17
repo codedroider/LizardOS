@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-24.04
+  build-iso:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
@@ -14,22 +14,33 @@ jobs:
       - name: Install Buildroot dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y \
-            build-essential wget cpio unzip rsync bc file \
-            python3 python3-flake8 python3-matplotlib python3-pytest \
-            libncurses5-dev libssl-dev cvs git mercurial subversion \
-            subversion asciidoc w3m dblatex graphviz python3-pyparsing \
-            libxml2-utils genisoimage libc6-i386
+          sudo apt-get install -y build-essential libncurses-dev rsync cpio python3 unzip bc wget file ccache
 
-      - name: Run build script
+      - name: Restore Buildroot Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            snakeware/buildroot/dl
+            ~/.buildroot-ccache
+          key: buildroot-ccache-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            buildroot-ccache-${{ runner.os }}-
+
+      - name: Build x86-64 ISO
         run: |
           cd snakeware
           chmod +x build.sh
-          ./build.sh x86-64
+          
+          export BR2_CCACHE=y
+          export BR2_CCACHE_DIR=~/.buildroot-ccache
+          
+          BR2_JLEVEL=$(nproc) ./build.sh x86-64
 
       - name: Upload ISO Artifact
         uses: actions/upload-artifact@v4
         with:
           name: snakeware-iso
-          path: snakeware/snakeware_x86-64.iso
+          path: |
+            snakeware/**/*.iso
+            snakeware/**/output/images/
           if-no-files-found: error
