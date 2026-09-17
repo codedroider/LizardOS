@@ -17,7 +17,7 @@ CUSTOM_USER_AGENT = (
     "LizardBrowser/1.0 (Privacy-First; Don't-Track-Me; No-Fingerprint)"
 )
 
-HOME_URL = 'https://github.io'
+HOME_URL = 'https://codedroider.github.io/codesearch/'
 
 class BrowserAPI:
     def __init__(self):
