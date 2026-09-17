@@ -17,7 +17,7 @@ CUSTOM_USER_AGENT = (
     "LizardBrowser/1.0 (Privacy-First; Don't-Track-Me; No-Fingerprint)"
 )
 
-HOME_URL = 'https://codedroider.github.io/codesearch/'
+HOME_URL = 'https://codedroider.github.io/codesearch/?startpage=lizard'
 
 class BrowserAPI:
     def __init__(self):
@@ -79,6 +79,35 @@ def launch_browser(start_url, manager, progress_bar, api_instance):
     )
     
     api_instance.window = window
+    
+    def fix_pointer_lock():
+        js_pointer_fix = r'''
+        (function() {
+            document.addEventListener('click', function(e) {
+                if (document.activeElement && 
+                   (document.activeElement.tagName === 'INPUT' || 
+                    document.activeElement.tagName === 'TEXTAREA' || 
+                    document.activeElement.isContentEditable)) {
+                    return;
+                }
+                var canvas = e.target.closest('canvas');
+                if (canvas) {
+                    canvas.requestPointerLock = canvas.requestPointerLock || 
+                                                canvas.mozRequestPointerLock || 
+                                                canvas.webkitRequestPointerLock;
+                    if (canvas.requestPointerLock && document.pointerLockElement !== canvas) {
+                        canvas.requestPointerLock();
+                    }
+                }
+            }, true);
+        })();
+        '''
+        try:
+            window.evaluate_js(js_pointer_fix)
+        except Exception:
+            pass
+
+    window.events.loaded += fix_pointer_lock
     
     def simulate_progress():
         import time
